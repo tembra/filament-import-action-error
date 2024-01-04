@@ -16,3 +16,19 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/generate-import-file', function () {
+    return response()->streamDownload(function () {
+        echo 'name,email,password' . PHP_EOL;
+
+        for ($i = 0; $i < 2000; $i++) {
+            $name = fake()->name();
+            $email = fake()->safeEmail();
+            $password = fake()->password();
+
+            echo "$name,$email,\"$password\"" . PHP_EOL;
+        }
+    }, 'generated-import-file.csv', [
+        'Content-Type' => 'text/csv',
+    ]);
+});
